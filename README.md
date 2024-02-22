@@ -1,6 +1,6 @@
 # PromptlyHub
 
-A simple REST API built with Flask for genrating, and managing AI prompts.
+A simple REST API built with Flask for generating, and managing AI prompts.
 
 ## Endpoints 
 
