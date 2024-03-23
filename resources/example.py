@@ -31,10 +31,18 @@ class Example(MethodView):
     @blp.response(200, ExampleSchema)
     def put(self, example_data, example_id):
         """Update Example by id"""
+        example = ExampleModel.query.get(example_id)
 
-        example = ExampleModel.query.get_or_404(example_id)
-        raise NotImplementedError("Deleting an example is not implemented.")
+        if example:
+            example.details = example_data["details"]
 
+        else:
+            example = ExampleModel(id=example_id, **example_data)
+
+        db.session.add(example)
+        db.session.commit()
+
+        return example
 
 @blp.route("/example")
 class ExamplePost(MethodView):
@@ -44,14 +52,12 @@ class ExamplePost(MethodView):
     def get(self):
         """Get Example list"""
         example = ExampleModel.query.get()
-        print(example)
         raise NotImplementedError("Deleting an example is not implemented.")
 
     @blp.arguments(ExampleSchema)
     @blp.response(201, ExampleSchema)
     def post(self, request_data):
         """Add example to the specified prompt"""
-
         example = ExampleModel(**request_data)
 
         try:

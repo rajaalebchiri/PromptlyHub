@@ -9,6 +9,7 @@ from db import db
 
 from resources.example import blp as ExampleBlueprint
 from resources.prompt import blp as PromptBlueprint
+from resources.tag import blp as TagBlueprint
 
 
 def create_app(db_url=None):
@@ -34,5 +35,6 @@ def create_app(db_url=None):
 
     api.register_blueprint(PromptBlueprint)
     api.register_blueprint(ExampleBlueprint)
+    api.register_blueprint(TagBlueprint)
 
     return app

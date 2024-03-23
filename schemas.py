@@ -8,16 +8,38 @@ class PlainExampleSchema(Schema):
     details = fields.Str(required=True)
 
 
-class ExampleUpdateSchema(Schema):
-    """Example Update Schema"""
-    details = fields.Str()
-
-
 class PlainPromptSchema(Schema):
     """Prompt Schema"""
     id = fields.Str(dump_only=True)
     title = fields.Str(required=True)
     description = fields.Str(required=True)
+
+class PlainTagSchema(Schema):
+    id = fields.Int(dump_only=True)
+    name = fields.Str()
+
+
+class PromptSchema(PlainPromptSchema):
+    """Prompt schema"""
+    examples = fields.List(fields.Nested(PlainExampleSchema()), dump_only=True)
+    tags = fields.List(fields.Nested(PlainTagSchema(), dump_only=True))
+
+
+class ExampleSchema(PlainExampleSchema):
+    """Example Schema"""
+    prompt_id = fields.Int(required=True, load_only=True)
+    prompt = fields.Nested(PlainPromptSchema(), dump_only=True)
+    tags = fields.List(fields.Nested(PlainTagSchema(), dump_only=True))
+
+class TagSchema(PlainTagSchema):
+    """Tag Schema"""
+    prompt_id = fields.Int(load_only=True)
+    prompt = fields.Nested(PlainPromptSchema(), dump_only=True)
+    examples = fields.List(fields.Nested(PlainExampleSchema(), dump_only=True))
+
+class ExampleUpdateSchema(Schema):
+    """Example Update Schema"""
+    details = fields.Str()
 
 
 class PromptUpdateSchema(Schema):
@@ -25,9 +47,12 @@ class PromptUpdateSchema(Schema):
     title = fields.Str()
     description = fields.Str()
 
-class ExampleSchema(PlainExampleSchema):
-    prompt_id = fields.Int(required=True, load_only=True)
-    details = fields.Nested(PlainPromptSchema(), dump_only=True)
 
-class PromptSchema(PlainPromptSchema):
-    examples = fields.List(fields.Nested(PlainExampleSchema()), dump_only=True)
+class TagAndExampleSchema(Schema):
+    """Tag and example schema"""
+    message = fields.Str()
+    example = fields.Nested(ExampleSchema)
+    tag = fields.Nested(TagSchema)
+
+
+

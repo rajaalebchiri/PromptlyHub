@@ -25,15 +25,28 @@ class Prompt(MethodView):
     def delete(self, prompt_id):
         """Delete Prompt by id"""
         prompt = PromptModel.query.get_or_404(prompt_id)
-        raise NotImplementedError("Deleting an example is not implemented.")
+        db.session.delete(prompt)
+        db.session.commit()
+        return {"message": "Prompt deleted successfully"}, 200
 
     @blp.arguments(PromptUpdateSchema)
     @blp.response(200, PromptSchema)
     def put(self, prompt_data, prompt_id):
         """Update Prompt by id"""
 
-        prompt = PromptModel.query.get_or_404(prompt_id)
-        raise NotImplementedError("Deleting an example is not implemented.")
+        prompt = PromptModel.query.get(prompt_id)
+
+        if prompt:
+            prompt.title = prompt_data["title"]
+            prompt.description = prompt_data["description"]
+
+        else:
+            prompt = PromptModel(id=prompt_id, **prompt_data)
+
+        db.session.add(prompt)
+        db.session.commit()
+
+        return prompt
 
 
 @blp.route("/prompt")
@@ -57,7 +70,7 @@ class PromptPost(MethodView):
         except SQLAlchemyError:
             abort(500,
                   message="An error occurred creating the prompt.")
-        
+
         return prompt
 
 
@@ -68,6 +81,5 @@ class PromptList(MethodView):
     @blp.response(200, PromptSchema(many=True))
     def get(self):
         """Retriee the list of prompts"""
-        prompt = PromptModel.query
-        print(prompt)
-        raise NotImplementedError("Deleting an example is not implemented.")
+        prompts = PromptModel.query.all()
+        return prompts
