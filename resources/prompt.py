@@ -12,7 +12,7 @@ from models import PromptModel
 blp = Blueprint("prompts", __name__, description="Operations on prompts")
 
 
-@blp.route("/prompt/<string:prompt_id>")
+@blp.route("/prompt/<int:prompt_id>")
 class Prompt(MethodView):
     """Prompt class to handle prompt actions by prompt id"""
 

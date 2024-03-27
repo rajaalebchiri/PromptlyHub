@@ -11,7 +11,7 @@ from models import TagModel, PromptModel, ExampleModel
 blp = Blueprint("tags", __name__, description="Operations on tags")
 
 
-@blp.route("/prompt/<string:prompt_id>/tag")
+@blp.route("/prompt/<int:prompt_id>/tag")
 class TagsInPrompt(MethodView):
     """Get Tags in a prompt"""
     @blp.response(200, TagSchema(many=True))
@@ -41,7 +41,7 @@ class TagsInPrompt(MethodView):
         return tag
 
 
-@blp.route("/tag/<string:tag_id>")
+@blp.route("/tag/<int:tag_id>")
 class Tag(MethodView):
     """Tag Operations by id"""
     @blp.response(200, TagSchema)
@@ -72,7 +72,7 @@ class Tag(MethodView):
         )
 
 
-@blp.route("/example/<string:example_id>/tag/<string:tag_id>")
+@blp.route("/example/<int:example_id>/tag/<int:tag_id>")
 class LinkTagsToExample(MethodView):
     """Link Tags to Examples"""
 

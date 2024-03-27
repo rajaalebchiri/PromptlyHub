@@ -3,6 +3,7 @@
 from flask.views import MethodView
 from flask_smorest import abort, Blueprint
 from sqlalchemy.exc import SQLAlchemyError
+from flask_jwt_extended import jwt_required, get_jwt
 
 from db import db
 from schemas import ExampleSchema, ExampleUpdateSchema
@@ -11,7 +12,7 @@ from models import ExampleModel
 blp = Blueprint("examples", __name__, description="Operations on examples")
 
 
-@blp.route("/example/<string:example_id>")
+@blp.route("/example/<int:example_id>")
 class Example(MethodView):
     """Handle Requests with Example id"""
 
@@ -22,10 +23,24 @@ class Example(MethodView):
         example = ExampleModel.query.get_or_404(example_id)
         return example
 
+    @jwt_required()
     def delete(self, example_id):
         """ Delete example by id """
+        
+        jwt = get_jwt()
+        if not jwt.get("is_admin"):
+            abort(401, message="Admin privilege required.")
+        
         example = ExampleModel.query.get_or_404(example_id)
-        raise NotImplementedError("Deleting an example is not implemented.")
+        
+        try:
+            db.session.delete(example)
+            db.session.commit()
+        
+            return {"message": "Example deleted."}
+        except SQLAlchemyError as e:
+            return {"message": str(e)}
+        
 
     @blp.arguments(ExampleUpdateSchema)
     @blp.response(200, ExampleSchema)
@@ -44,15 +59,16 @@ class Example(MethodView):
 
         return example
 
+
 @blp.route("/example")
 class ExamplePost(MethodView):
     """Handle Example Post request"""
 
+    @jwt_required()
     @blp.response(200, ExampleSchema(many=True))
     def get(self):
         """Get Example list"""
-        example = ExampleModel.query.get()
-        raise NotImplementedError("Deleting an example is not implemented.")
+        return ExampleModel.query.all()
 
     @blp.arguments(ExampleSchema)
     @blp.response(201, ExampleSchema)

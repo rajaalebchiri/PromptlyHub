@@ -6,6 +6,7 @@ class PlainExampleSchema(Schema):
     """Example Schema"""
     id = fields.Str(dump_only=True)
     details = fields.Str(required=True)
+    description = fields.Str(required=False)
 
 
 class PlainPromptSchema(Schema):
@@ -40,6 +41,7 @@ class TagSchema(PlainTagSchema):
 class ExampleUpdateSchema(Schema):
     """Example Update Schema"""
     details = fields.Str()
+    description = fields.Str()
 
 
 class PromptUpdateSchema(Schema):
@@ -54,5 +56,8 @@ class TagAndExampleSchema(Schema):
     example = fields.Nested(ExampleSchema)
     tag = fields.Nested(TagSchema)
 
-
+class UserSchema(Schema):
+    id = fields.Int(dump_only=True)
+    username = fields.Str(required=True)
+    password = fields.Str(required=True, load_only=True)
 
