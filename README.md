@@ -1,8 +1,5 @@
 # PromptlyHub
 
-change .env.test to .env and add your variables
-the app contains swagger documentation
-i changes the db to postgresql
 
 ## Introduction
 A simple REST API built with Flask for generating, and managing AI prompts.
@@ -12,6 +9,11 @@ A simple REST API built with Flask for generating, and managing AI prompts.
 - CRUD operations for managing AI prompts.
 - User authentication and management.
 - Supports operations on prompt examples and tags.
+- Swagger documentation is now available for easier API navigation and testing.
+- Database has been migrated to PostgreSQL for better scalability and performance.
+- New feature: Get prompts by category/tag.
+  - Accepts: Category/Tag name
+  - Returns: Prompts belonging to the specified category/tag
 
 ## Installation
 
@@ -19,6 +21,7 @@ A simple REST API built with Flask for generating, and managing AI prompts.
 
 - Docker
 - Python 3.10
+- PostgreSQL
 
 ### Setup
 
@@ -28,48 +31,67 @@ A simple REST API built with Flask for generating, and managing AI prompts.
    cd promptlyhub
    ````
 
-2. **Build the Docker image**:
+2. **Setting Up Your Development Environment**
+    
+    **Environment Variables:**
+        
+    Rename `.env.test` to `.env` and ensure all necessary environment variables are correctly set up for your local development.
+    
+    **Database Configuration:**
+        
+    Ensure PostgreSQL is set up and configured in your `.env` file.
+
+3. **Build the Docker image**:
     ```bash
     docker build -t promptlyhub .
     ````
 
-3. **Run the container**:
+4. **Run the container**:
     ```bash
     docker run -p 5050:5050 promptlyhub
     ````
 
 ## API Documentation
 
-### Prompts
+Access the Swagger UI to see and interact with the API's endpoints by navigating to:
+`{{url}}/swagger-uir`
 
-#### List all prompts:
+### Detailed Endpoint Descriptions
+
+#### Prompts
+
+##### List all prompts:
 - **Endpoint**: `GET /prompts`
 - **Description**: Retrieves a list of all prompts.
 
-#### Create a Prompt
+##### List prompts by category:
+- **Endpoint**: `GET /prompts/{TAG}`
+- **Description**: Retrieves a list of all prompts with a specific tag.
+
+##### Create a Prompt
 - **Endpoint**: `POST /prompt`
 - **Description**: Creates a new prompt.
 
-#### Retrieve a prompt by ID
+##### Retrieve a prompt by ID
 - **Endpoint**: `GET /prompt/{PROMPT_ID}`
 - **Description**: Get a prompt by ID.
 
-#### Update a prompt by ID
+##### Update a prompt by ID
 - **Endpoint**: `PUT /prompt/{PROMPT_ID}`
 - **Description**: Update a prompt by ID.
 
-#### Delete a prompt by ID
+##### Delete a prompt by ID
 - **Endpoint**: `DELETE /prompt/{PROMPT_ID}`
 - **Description**: Delete a prompt by ID.
 
 
-### Examples
+#### Examples
 
-#### Retrieve examples for a specific prompt:
+##### Retrieve examples for a specific prompt:
 - **Endpoint**: `GET /prompt/{PROMPT_ID}/examples`
 - **Description**: Retrieves all examples associated with a specific prompt.
   
-#### Create an example for a prompt:
+##### Create an example for a prompt:
 - **Endpoint**: `POST /example`
 - **Description**: Create an Example associated with a specific prompt.
     ```JSON
@@ -79,31 +101,31 @@ A simple REST API built with Flask for generating, and managing AI prompts.
     }
     ```
 
-#### Update an example by ID:
+##### Update an example by ID:
 - **Endpoint**: `PUT /example/{EXAMPLE_ID}`
 - **Description**: Update example Informations by ID.
 
-#### Delete an example by ID:
+##### Delete an example by ID:
 - **Endpoint**: `DELETE /example/{EXAMPLE_ID}`
 - **Description**: Delete Example by ID.
 
-### Tags
+#### Tags
 
-#### Retrieve tags for a specific prompt:
+##### Retrieve tags for a specific prompt:
 - **Endpoint**: `GET /prompt/{PROMPT_ID}/tag`
 - **Description**: Retrieves all tags associated with a specific prompt.
 
-#### Associate a tag with a prompt:
+##### Associate a tag with a prompt:
 - **Endpoint**: `POST /prompt/{PROMPT_ID}/tag`
 - **Description**: Add a tag to a prompt
 
-#### Delete a tag:
+##### Delete a tag:
 - **Endpoint**: `DELETE /tag/{TAG_ID}`
 - **Description**: Delete a tag associated with a specific prompt
   
 ### Authentication
 
-#### Register a user:
+##### Register a user:
 - **Endpoint**: `POST /register`
 - **Description**: Create a new user
     ```json
@@ -113,22 +135,22 @@ A simple REST API built with Flask for generating, and managing AI prompts.
     }
     ````
 
-#### Authenticate a user (login):
+##### Authenticate a user (login):
 - **Endpoint**: `POST /login`
 - **Description**: Log in a user.
 
 
-#### Log out the current user:
+##### Log out the current user:
 - **Endpoint**: `POST /logout`
 - **Description**: Log out a user.
 
 
-#### Retrieve user details:
+##### Retrieve user details:
 - **Endpoint**: `GET /user/{USER_ID}`
 - **Description**: Get details about a specified user.
 
 
-#### Delete a user:
+##### Delete a user:
 - **Endpoint**: `DELETE /user/{USER_ID}`
 - **Description**: Delete a user account.
 

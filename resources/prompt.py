@@ -6,7 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 
 from db import db
 from schemas import PromptSchema, PromptUpdateSchema
-from models import PromptModel
+from models import PromptModel, TagModel
 
 
 blp = Blueprint("prompts", __name__, description="Operations on prompts")
@@ -80,6 +80,23 @@ class PromptList(MethodView):
 
     @blp.response(200, PromptSchema(many=True))
     def get(self):
-        """Retriee the list of prompts"""
+        """Retrieve the list of prompts"""
         prompts = PromptModel.query.all()
         return prompts
+
+@blp.route("/prompts/<tag>")
+class PromptsByCategory(MethodView):
+    """Get a list of prompts by category"""
+    
+    @blp.response(200, PromptSchema(many=True))
+    def get(self, tag):
+        """Retrieve the list of prompts by category"""
+        print(tag)
+        category = TagModel.query.filter(TagModel.name == tag).first()
+        print(category)
+        if category:
+            prompts = PromptModel.query.filter(PromptModel.tags.any(name=tag)).all()
+            if prompts:
+                return PromptSchema(many=True).dump(prompts)
+            return "No prompts found for this category", 404
+        return "Category not found", 404
