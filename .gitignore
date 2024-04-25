@@ -1,6 +1,8 @@
 .venv
 .test-venv
+.env
 __pycache__
 instance
 *.pyc
 .DS_Store
+.virt

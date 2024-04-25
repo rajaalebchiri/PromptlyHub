@@ -5,6 +5,7 @@ from flask import Flask, jsonify
 from flask_smorest import Api
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
+from dotenv import load_dotenv
 
 from blocklist import BLOCKLIST
 from db import db
@@ -18,6 +19,7 @@ from resources.user import blp as UserBlueprint
 def create_app(db_url=None):
     """Create app"""
     app = Flask(__name__)
+    load_dotenv()
 
     app.config["PROPAGATE_EXCEPTIONS"] = True
     app.config["API_TITLE"] = "PromptlyHub REST API"

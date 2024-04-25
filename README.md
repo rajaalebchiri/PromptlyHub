@@ -1,5 +1,9 @@
 # PromptlyHub
 
+change .env.test to .env and add your variables
+the app contains swagger documentation
+i changes the db to postgresql
+
 ## Introduction
 A simple REST API built with Flask for generating, and managing AI prompts.
 

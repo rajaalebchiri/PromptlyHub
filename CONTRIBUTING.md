@@ -9,3 +9,5 @@ docker build -t prompt-flask-api .
 ```
 docker run -dp 5000:5000 -w /app -v "$(pwd):/app" IMAGE_NAME sh -c "flask run"
 ```
+
+change .env.test to .env and add your variables
