@@ -15,6 +15,7 @@ class PlainPromptSchema(Schema):
     title = fields.Str(required=True)
     description = fields.Str(required=True)
 
+
 class PlainTagSchema(Schema):
     id = fields.Int(dump_only=True)
     name = fields.Str()
@@ -32,11 +33,13 @@ class ExampleSchema(PlainExampleSchema):
     prompt = fields.Nested(PlainPromptSchema(), dump_only=True)
     tags = fields.List(fields.Nested(PlainTagSchema(), dump_only=True))
 
+
 class TagSchema(PlainTagSchema):
     """Tag Schema"""
     prompt_id = fields.Int(load_only=True)
     prompt = fields.Nested(PlainPromptSchema(), dump_only=True)
     examples = fields.List(fields.Nested(PlainExampleSchema(), dump_only=True))
+
 
 class ExampleUpdateSchema(Schema):
     """Example Update Schema"""
@@ -56,8 +59,12 @@ class TagAndExampleSchema(Schema):
     example = fields.Nested(ExampleSchema)
     tag = fields.Nested(TagSchema)
 
+
 class UserSchema(Schema):
     id = fields.Int(dump_only=True)
     username = fields.Str(required=True)
     password = fields.Str(required=True, load_only=True)
 
+
+class UserRegisterSchema(UserSchema):
+    email = fields.Str(required=True)

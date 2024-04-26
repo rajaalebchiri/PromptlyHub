@@ -1,10 +1,12 @@
 """PromptlyHub API"""
 import os
+import redis
 
 from flask import Flask, jsonify
 from flask_smorest import Api
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
+from rq import Queue
 from dotenv import load_dotenv
 
 from blocklist import BLOCKLIST
@@ -20,6 +22,12 @@ def create_app(db_url=None):
     """Create app"""
     app = Flask(__name__)
     load_dotenv()
+    
+    # if you want to user background worker to send emails
+    # connection = redis.from_url(
+    #     os.getenv("REDIS_URL")
+    # )
+    # app.queue = Queue("emails", connection=connection)
 
     app.config["PROPAGATE_EXCEPTIONS"] = True
     app.config["API_TITLE"] = "PromptlyHub REST API"

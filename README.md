@@ -1,5 +1,10 @@
 # PromptlyHub
 
+add mailgun credentials to .env
+added mailgun to send emails
+optional but you will find comments of code in case you want to use background worker like redis worker to send emails using queue
+    added a redis queue for tasks queue
+    add docker to run rq docker run -w /app IMAGE sh -c "rq worker -u REDIS_URL emails"
 
 ## Introduction
 A simple REST API built with Flask for generating, and managing AI prompts.
