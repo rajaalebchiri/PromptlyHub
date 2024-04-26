@@ -1,11 +1,5 @@
 # PromptlyHub
 
-add mailgun credentials to .env
-added mailgun to send emails
-optional but you will find comments of code in case you want to use background worker like redis worker to send emails using queue
-    added a redis queue for tasks queue
-    add docker to run rq docker run -w /app IMAGE sh -c "rq worker -u REDIS_URL emails"
-
 ## Introduction
 A simple REST API built with Flask for generating, and managing AI prompts.
 
@@ -19,6 +13,11 @@ A simple REST API built with Flask for generating, and managing AI prompts.
 - New feature: Get prompts by category/tag.
   - Accepts: Category/Tag name
   - Returns: Prompts belonging to the specified category/tag
+- New Feature: Pagination
+  - The /prompts endpoint now supports pagination, allowing users to retrieve prompts in manageable chunks for better performance and user experience.
+  - Sending Confirmation Emails with Mailgun: the API now supports sending confirmation emails to users using Mailgun
+  - Option: Asynchoronous Email Sending with Redis Queue and Background Worker (uncommernt the code for usage)
+  
 
 ## Installation
 
@@ -68,6 +67,8 @@ Access the Swagger UI to see and interact with the API's endpoints by navigating
 ##### List all prompts:
 - **Endpoint**: `GET /prompts`
 - **Description**: Retrieves a list of all prompts.
+- **Endpoint**: `GET /prompts?page=1&per_page=10`
+- **Description**: Retrieves a list of all prompts using pagination
 
 ##### List prompts by category:
 - **Endpoint**: `GET /prompts/{TAG}`

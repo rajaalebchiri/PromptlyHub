@@ -3,6 +3,7 @@ from flask import request
 from flask.views import MethodView
 from flask_smorest import abort, Blueprint
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
+from flask_sqlalchemy import SQLAlchemy, pagination
 
 from db import db
 from schemas import PromptSchema, PromptUpdateSchema
@@ -81,13 +82,23 @@ class PromptList(MethodView):
     @blp.response(200, PromptSchema(many=True))
     def get(self):
         """Retrieve the list of prompts"""
-        prompts = PromptModel.query.all()
-        return prompts
+        page = request.args.get("page", type=int)
+        per_page = request.args.get("per_page", type=int)
+        
+        if page and per_page:
+
+            pagination_query = PromptModel.query.paginate(
+                page=page, per_page=per_page, error_out=False)
+
+            prompts = pagination_query.items
+
+            return prompts
+        return PromptModel.query.all()
 
 @blp.route("/prompts/<tag>")
 class PromptsByCategory(MethodView):
     """Get a list of prompts by category"""
-    
+
     @blp.response(200, PromptSchema(many=True))
     def get(self, tag):
         """Retrieve the list of prompts by category"""
@@ -95,7 +106,8 @@ class PromptsByCategory(MethodView):
         category = TagModel.query.filter(TagModel.name == tag).first()
         print(category)
         if category:
-            prompts = PromptModel.query.filter(PromptModel.tags.any(name=tag)).all()
+            prompts = PromptModel.query.filter(
+                PromptModel.tags.any(name=tag)).all()
             if prompts:
                 return PromptSchema(many=True).dump(prompts)
             return "No prompts found for this category", 404
